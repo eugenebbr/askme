@@ -1,4 +1,5 @@
 class ApplicationController < ActionController::Base
+
   protect_from_forgery with: :exception
 
   helper_method :current_user
@@ -7,6 +8,11 @@ class ApplicationController < ActionController::Base
 
   def current_user
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
+  end
+
+  def create_session(email, password)
+    @user = User.authenticate(email, password)
+    session[:user_id] = @user.id
   end
 
   def reject_user

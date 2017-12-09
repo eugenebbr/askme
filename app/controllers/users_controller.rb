@@ -17,6 +17,7 @@ class UsersController < ApplicationController
     @user = User.new(user_params)
 
     if @user.save
+      create_session(@user.email, @user.password)
       redirect_to root_url, notice: 'Пользователь успешно зарегистрирован!'
     else
       render 'new'
@@ -36,7 +37,6 @@ class UsersController < ApplicationController
 
   def show
     @questions = @user.questions.order(created_at: :desc)
-
     @new_question = @user.questions.build
   end
 
@@ -51,7 +51,6 @@ class UsersController < ApplicationController
   end
 
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation,
-                                 :name, :username, :avatar_url)
+    params.require(:user).permit(:email, :password, :password_confirmation, :name, :username, :avatar_url)
   end
 end
